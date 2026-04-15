@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://crxl3vhg66tqm"]
+
+[ext_resource type="PackedScene" uid="uid://dlbdwx7exftiy" path="res://scenes/world/main.tscn" id="1_ig7tw"]
+
+[node name="Main" unique_id=2091731742 instance=ExtResource("1_ig7tw")]
+
+[node name="MeshInstance3D" parent="Globe" parent_id_path=PackedInt32Array(1763882730) index="0" unique_id=1110722571]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36.46811, -622.6455, -284.2882)
+
+[node name="CollisionShape3D" parent="Globe" parent_id_path=PackedInt32Array(1763882730) index="1" unique_id=357782552]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 66.11755, -278.62305, 15.996887)

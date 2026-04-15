@@ -1,32 +1,60 @@
-[gd_scene load_steps=5 format=3 uid="uid://main001"]
+[gd_scene load_steps=7 format=3]
 
-[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1_player"]
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_001"]
-size = Vector2(40, 40)
+[sub_resource type="SphereMesh" id="2_sphere"]
+radius = 1024.0
+height = 2048.0
 
-[sub_resource type="StandardMaterial3D" id="Material_001"]
-albedo_color = Color(0.25, 0.55, 0.25)
+[sub_resource type="StandardMaterial3D" id="3_mat"]
+albedo_color = Color(0.25, 0.55, 0.25, 1)
 
-[sub_resource type="ConcavePolygonShape3D" id="GroundShape_001"]
+[sub_resource type="SphereShape3D" id="4_sphere_shape"]
+radius = 1024.0
 
-[node name="Main" type="Node3D"]
+[sub_resource type="CylinderMesh" id="5_beam_mesh"]
+top_radius = 6.0
+bottom_radius = 6.0
+height = 256.0
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[sub_resource type="StandardMaterial3D" id="6_north_pole_mat"]
+albedo_color = Color(1, 0, 0, 1)
+emission_enabled = true
+emission = Color(1, 0, 0, 1)
+emission_energy_multiplier = 2.0
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[sub_resource type="StandardMaterial3D" id="7_south_pole_mat"]
+albedo_color = Color(1, 1, 1, 1)
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 2.0
+
+[node name="Main" type="Node3D" unique_id=2091731742]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=2094561873]
 transform = Transform3D(0.866, -0.433, 0.25, 0, 0.5, 0.866, -0.5, -0.75, 0.433, 0, 10, 0)
 light_energy = 1.2
 shadow_enabled = true
 
-[node name="Ground" type="StaticBody3D" parent="."]
+[node name="Globe" type="StaticBody3D" parent="." unique_id=1763882730]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1024, 0)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground"]
-mesh = SubResource("PlaneMesh_001")
-surface_material_override/0 = SubResource("Material_001")
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Globe" unique_id=1110722571]
+mesh = SubResource("2_sphere")
+surface_material_override/0 = SubResource("3_mat")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground"]
-shape = SubResource("GroundShape_001")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Globe" unique_id=357782552]
+shape = SubResource("4_sphere_shape")
 
-[node name="Player" parent="." instance=ExtResource("1")]
+[node name="NorthPoleBeam" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 128, 0)
+mesh = SubResource("5_beam_mesh")
+surface_material_override/0 = SubResource("6_north_pole_mat")
+
+[node name="SouthPoleBeam" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2176, 0)
+mesh = SubResource("5_beam_mesh")
+surface_material_override/0 = SubResource("7_south_pole_mat")
+
+[node name="Player" parent="." unique_id=1307422223 instance=ExtResource("1_player")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)

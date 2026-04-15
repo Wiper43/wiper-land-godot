@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3 uid="uid://main001"]
+
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_001"]
+size = Vector2(40, 40)
+
+[sub_resource type="StandardMaterial3D" id="Material_001"]
+albedo_color = Color(0.25, 0.55, 0.25)
+
+[sub_resource type="ConcavePolygonShape3D" id="GroundShape_001"]
+
+[node name="Main" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866, -0.433, 0.25, 0, 0.5, 0.866, -0.5, -0.75, 0.433, 0, 10, 0)
+light_energy = 1.2
+shadow_enabled = true
+
+[node name="Ground" type="StaticBody3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground"]
+mesh = SubResource("PlaneMesh_001")
+surface_material_override/0 = SubResource("Material_001")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground"]
+shape = SubResource("GroundShape_001")
+
+[node name="Player" parent="." instance=ExtResource("1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)

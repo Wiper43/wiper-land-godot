@@ -1,7 +1,19 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git *)"
+      "Bash(git *)",
+      "WebFetch(domain:glama.ai)",
+      "Bash(powershell.exe -Command \"claude mcp add -s user godot -- npx -y '@coding-solo/godot-mcp' 2>&1\")",
+      "Bash(powershell.exe -Command \"claude mcp add -s user godotlens -- npx -y godotlens-mcp 2>&1\")",
+      "Bash(powershell.exe -Command \"claude mcp add -s user blender -- uvx blender-mcp 2>&1\")",
+      "Bash(powershell.exe *)",
+      "Bash(\"/c/Users/green/AppData/Local/Programs/claude-code/resources/app/node_modules/.bin/claude\" mcp *)",
+      "Bash(claude mcp *)",
+      "Skill(update-config)",
+      "Bash(netstat -ano)",
+      "mcp__blender__get_scene_info",
+      "mcp__blender__execute_blender_code",
+      "mcp__blender__get_viewport_screenshot"
     ]
   }
 }

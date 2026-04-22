@@ -1,19 +1,25 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scripts/player/player.gd" id="1_script"]
+[ext_resource type="Script" path="res://scripts/combat/health.gd" id="2_health"]
 
-[sub_resource type="CapsuleShape3D" id="2_capsule"]
+[sub_resource type="CapsuleShape3D" id="3_capsule"]
 radius = 0.4
 height = 1.8
 
 [node name="Player" type="CharacterBody3D"]
+collision_layer = 2
+collision_mask = 1
 script = ExtResource("1_script")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
-shape = SubResource("2_capsule")
+shape = SubResource("3_capsule")
 
 [node name="CameraArm" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
 
 [node name="Camera3D" type="Camera3D" parent="CameraArm"]
+
+[node name="Health" type="Node" parent="."]
+script = ExtResource("2_health")

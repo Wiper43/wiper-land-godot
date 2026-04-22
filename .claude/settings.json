@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//e/Wiper-Land-Obsidian/Wiper-Land-Brain/wiki/**)",
+      "Read(//e/Wiper-Land-Obsidian/Wiper-Land-Brain/raw/**)"
+    ]
+  }
+}

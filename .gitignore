@@ -14,6 +14,10 @@
 # Godot editor temp files
 *.tmp
 
+# Python / Blender helper scripts
+__pycache__/
+*.py[cod]
+
 # OS files
 .DS_Store
 Thumbs.db

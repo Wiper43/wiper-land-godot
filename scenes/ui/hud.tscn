@@ -1,0 +1,325 @@
+[gd_scene load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/hud.gd" id="1_hud"]
+
+[sub_resource type="StyleBoxFlat" id="2_fill"]
+bg_color = Color(0.8, 0.15, 0.15, 1)
+
+[sub_resource type="StyleBoxFlat" id="3_bg"]
+bg_color = Color(0.15, 0.15, 0.15, 0.8)
+
+[sub_resource type="LabelSettings" id="4_label_settings"]
+font_size = 13
+font_color = Color(1, 1, 1, 1)
+outline_size = 3
+outline_color = Color(0, 0, 0, 0.85)
+
+[sub_resource type="StyleBoxFlat" id="5_options_bg"]
+bg_color = Color(0.04, 0.045, 0.04, 0.72)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 0.16)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="LabelSettings" id="6_options_label"]
+font_size = 12
+font_color = Color(1, 1, 1, 0.92)
+outline_size = 2
+outline_color = Color(0, 0, 0, 0.75)
+
+[sub_resource type="StyleBoxFlat" id="7_map_bg"]
+bg_color = Color(0.02, 0.08, 0.07, 0.86)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.42, 0.85, 0.55, 0.5)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="LabelSettings" id="8_map_title_label"]
+font_size = 15
+font_color = Color(0.8, 1, 0.78, 1)
+outline_size = 3
+outline_color = Color(0, 0, 0, 0.8)
+
+[sub_resource type="LabelSettings" id="9_compass_label"]
+font_size = 28
+font_color = Color(1, 0.08, 0.04, 1)
+outline_size = 4
+outline_color = Color(0, 0, 0, 0.8)
+
+[node name="HUD" type="CanvasLayer"]
+script = ExtResource("1_hud")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+offset_right = 224.0
+offset_bottom = 48.0
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="HPBar" type="ProgressBar" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+custom_minimum_size = Vector2(220, 24)
+max_value = 100.0
+value = 100.0
+show_percentage = false
+theme_override_styles/fill = SubResource("2_fill")
+theme_override_styles/background = SubResource("3_bg")
+
+[node name="HPText" type="Label" parent="MarginContainer/VBoxContainer/HPBar"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "100 / 100"
+label_settings = SubResource("4_label_settings")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="OptionsPanel" type="PanelContainer" parent="."]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -236.0
+offset_top = -82.0
+offset_right = -12.0
+offset_bottom = -12.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_styles/panel = SubResource("5_options_bg")
+
+[node name="FPSPanel" type="PanelContainer" parent="."]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -118.0
+offset_top = -116.0
+offset_right = -12.0
+offset_bottom = -88.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_styles/panel = SubResource("5_options_bg")
+
+[node name="FPSValue" type="Label" parent="FPSPanel"]
+layout_mode = 2
+text = "FPS 0"
+label_settings = SubResource("6_options_label")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="OptionsPanel"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="VolumeRow" type="HBoxContainer" parent="OptionsPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="VolumeLabel" type="Label" parent="OptionsPanel/VBoxContainer/VolumeRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Master Volume"
+label_settings = SubResource("6_options_label")
+
+[node name="VolumeValue" type="Label" parent="OptionsPanel/VBoxContainer/VolumeRow"]
+layout_mode = 2
+custom_minimum_size = Vector2(42, 0)
+text = "10%"
+label_settings = SubResource("6_options_label")
+horizontal_alignment = 2
+
+[node name="MasterVolumeSlider" type="HSlider" parent="OptionsPanel/VBoxContainer"]
+layout_mode = 2
+custom_minimum_size = Vector2(200, 22)
+min_value = 0.0
+max_value = 100.0
+step = 1.0
+value = 10.0
+
+[node name="CompassPanel" type="Control" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -86.0
+offset_top = 10.0
+offset_right = 86.0
+offset_bottom = 92.0
+grow_horizontal = 2
+
+[node name="CompassNeedle" type="Label" parent="CompassPanel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -16.0
+offset_top = -22.0
+offset_right = 16.0
+offset_bottom = 22.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(16, 22)
+text = "v"
+label_settings = SubResource("9_compass_label")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NorthLabel" type="Label" parent="CompassPanel"]
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 0.0
+anchor_right = 0.5
+offset_left = -12.0
+offset_top = 0.0
+offset_right = 12.0
+offset_bottom = 20.0
+grow_horizontal = 2
+text = "N"
+label_settings = SubResource("6_options_label")
+horizontal_alignment = 1
+
+[node name="SouthLabel" type="Label" parent="CompassPanel"]
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -12.0
+offset_top = -22.0
+offset_right = 12.0
+offset_bottom = -2.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "S"
+label_settings = SubResource("6_options_label")
+horizontal_alignment = 1
+
+[node name="EastLabel" type="Label" parent="CompassPanel"]
+layout_mode = 1
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -24.0
+offset_top = -10.0
+offset_right = -2.0
+offset_bottom = 10.0
+grow_horizontal = 0
+grow_vertical = 2
+text = "E"
+label_settings = SubResource("6_options_label")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="WestLabel" type="Label" parent="CompassPanel"]
+layout_mode = 1
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 2.0
+offset_top = -10.0
+offset_right = 24.0
+offset_bottom = 10.0
+grow_vertical = 2
+text = "W"
+label_settings = SubResource("6_options_label")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MapPanel" type="PanelContainer" parent="."]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -180.0
+offset_top = -150.0
+offset_right = 180.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("5_options_bg")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MapPanel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Title" type="Label" parent="MapPanel/VBoxContainer"]
+layout_mode = 2
+text = "Map"
+label_settings = SubResource("8_map_title_label")
+horizontal_alignment = 1
+
+[node name="MapBody" type="Panel" parent="MapPanel/VBoxContainer"]
+clip_contents = true
+layout_mode = 2
+custom_minimum_size = Vector2(330, 170)
+theme_override_styles/panel = SubResource("7_map_bg")
+
+[node name="EquatorLine" type="ColorRect" parent="MapPanel/VBoxContainer/MapBody"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 84.0
+offset_bottom = 86.0
+grow_horizontal = 2
+color = Color(0.42, 0.85, 0.55, 0.22)
+
+[node name="PrimeMeridianLine" type="ColorRect" parent="MapPanel/VBoxContainer/MapBody"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 0.0
+anchor_bottom = 1.0
+offset_left = 164.0
+offset_right = 166.0
+grow_vertical = 2
+color = Color(0.42, 0.85, 0.55, 0.22)
+
+[node name="PlayerDot" type="ColorRect" parent="MapPanel/VBoxContainer/MapBody"]
+layout_mode = 0
+offset_left = 161.0
+offset_top = 161.0
+offset_right = 169.0
+offset_bottom = 169.0
+color = Color(1, 0.1, 0.06, 1)
+
+[node name="MapNorthArrow" type="Label" parent="MapPanel/VBoxContainer/MapBody"]
+layout_mode = 0
+offset_left = 149.0
+offset_top = 137.0
+offset_right = 181.0
+offset_bottom = 181.0
+pivot_offset = Vector2(16, 22)
+text = "v"
+label_settings = SubResource("9_compass_label")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="WorldPositionValue" type="Label" parent="MapPanel/VBoxContainer"]
+layout_mode = 2
+text = "XYZ  0.0, 0.0, 0.0"
+label_settings = SubResource("6_options_label")
+
+[node name="GeoPositionValue" type="Label" parent="MapPanel/VBoxContainer"]
+layout_mode = 2
+text = "Lat 0.00  Lon 0.00  Alt 0.0"
+label_settings = SubResource("6_options_label")

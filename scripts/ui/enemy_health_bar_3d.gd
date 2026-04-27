@@ -16,6 +16,7 @@ var _last_health: float = 0.0
 var _bar_back: MeshInstance3D = null
 var _bar_fill: MeshInstance3D = null
 var _fill_material: StandardMaterial3D = null
+var _number_label: Label3D = null
 
 
 func _ready() -> void:
@@ -76,6 +77,18 @@ func _build_bar() -> void:
 	_bar_fill.set_surface_override_material(0, _fill_material)
 	add_child(_bar_fill)
 
+	_number_label = Label3D.new()
+	_number_label.name = "Numbers"
+	_number_label.position = Vector3(0.0, 0.18, -0.02)
+	_number_label.font_size = 36
+	_number_label.modulate = Color(1.0, 1.0, 1.0, 1.0)
+	_number_label.outline_modulate = Color(0.0, 0.0, 0.0, 0.9)
+	_number_label.outline_size = 8
+	_number_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_number_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_number_label.no_depth_test = true
+	add_child(_number_label)
+
 
 func _face_current_camera() -> void:
 	var camera: Camera3D = get_viewport().get_camera_3d()
@@ -102,3 +115,5 @@ func _update_bar(current: float, maximum: float) -> void:
 	_bar_fill.position.x = -BAR_WIDTH * (1.0 - fraction) * 0.5
 	if _fill_material != null:
 		_fill_material.albedo_color = Color(lerpf(0.95, 0.1, fraction), lerpf(0.05, 0.75, fraction), 0.05, 1.0)
+	if _number_label != null:
+		_number_label.text = "%d / %d" % [roundi(current), roundi(maximum)]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scripts/player/player.gd" id="1_script"]
 [ext_resource type="Script" path="res://scripts/combat/health.gd" id="2_health"]
@@ -6,6 +6,22 @@
 [sub_resource type="CapsuleShape3D" id="3_capsule"]
 radius = 0.4
 height = 1.8
+
+[sub_resource type="CapsuleMesh" id="4_body_mesh"]
+radius = 0.34
+height = 1.55
+
+[sub_resource type="StandardMaterial3D" id="5_body_mat"]
+albedo_color = Color(0.18, 0.42, 0.9, 1)
+roughness = 0.72
+
+[sub_resource type="SphereMesh" id="6_head_mesh"]
+radius = 0.24
+height = 0.42
+
+[sub_resource type="StandardMaterial3D" id="7_head_mat"]
+albedo_color = Color(0.94, 0.78, 0.56, 1)
+roughness = 0.82
 
 [node name="Player" type="CharacterBody3D"]
 collision_layer = 2
@@ -15,6 +31,18 @@ script = ExtResource("1_script")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 shape = SubResource("3_capsule")
+
+[node name="VisualBody" type="Node3D" parent="."]
+
+[node name="Body" type="MeshInstance3D" parent="VisualBody"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.86, 0)
+mesh = SubResource("4_body_mesh")
+surface_material_override/0 = SubResource("5_body_mat")
+
+[node name="Head" type="MeshInstance3D" parent="VisualBody"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.65, 0)
+mesh = SubResource("6_head_mesh")
+surface_material_override/0 = SubResource("7_head_mat")
 
 [node name="CameraArm" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)

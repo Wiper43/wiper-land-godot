@@ -6,6 +6,8 @@ const MASTER_BUS_NAME: StringName = &"Master"
 
 @onready var hp_bar: ProgressBar = $MarginContainer/VBoxContainer/HPBar
 @onready var hp_text: Label = $MarginContainer/VBoxContainer/HPBar/HPText
+@onready var climb_energy_bar: ProgressBar = $MarginContainer/VBoxContainer/ClimbEnergyBar
+@onready var climb_energy_text: Label = $MarginContainer/VBoxContainer/ClimbEnergyBar/ClimbEnergyText
 @onready var fps_value: Label = $FPSPanel/FPSValue
 @onready var volume_slider: HSlider = $OptionsPanel/VBoxContainer/MasterVolumeSlider
 @onready var volume_value: Label = $OptionsPanel/VBoxContainer/VolumeRow/VolumeValue
@@ -51,6 +53,8 @@ func connect_to_player(player_health: Health, player_node: Node3D, north_target:
 	hp_bar.value = player_health.current_health
 	_update_hp_text(player_health.current_health, player_health.max_health)
 	player_health.health_changed.connect(_on_health_changed)
+	if player_node.has_signal("climb_energy_changed"):
+		player_node.connect("climb_energy_changed", _on_climb_energy_changed)
 
 
 func _on_health_changed(current: float, maximum: float) -> void:
@@ -61,6 +65,13 @@ func _on_health_changed(current: float, maximum: float) -> void:
 
 func _update_hp_text(current: float, maximum: float) -> void:
 	hp_text.text = "%d / %d" % [roundi(current), roundi(maximum)]
+
+
+func _on_climb_energy_changed(current: float, maximum: float, should_show: bool) -> void:
+	climb_energy_bar.max_value = maximum
+	climb_energy_bar.value = current
+	climb_energy_bar.visible = should_show
+	climb_energy_text.text = "Climb %.1f / %.1f" % [current, maximum]
 
 
 func _on_master_volume_changed(value: float) -> void:

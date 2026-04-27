@@ -1,0 +1,39 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/entities/target_dummy.gd" id="1_dummy"]
+[ext_resource type="Script" path="res://scripts/combat/health.gd" id="2_health"]
+[ext_resource type="Script" path="res://scripts/ui/enemy_health_bar_3d.gd" id="3_enemy_bar"]
+
+[sub_resource type="CapsuleShape3D" id="1_shape"]
+radius = 0.45
+height = 1.9
+
+[sub_resource type="CapsuleMesh" id="2_mesh"]
+radius = 0.45
+height = 1.9
+
+[sub_resource type="StandardMaterial3D" id="3_mat"]
+albedo_color = Color(0.85, 0.58, 0.18, 1)
+roughness = 0.82
+
+[node name="TargetDummy" type="StaticBody3D"]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("1_dummy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
+shape = SubResource("1_shape")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
+mesh = SubResource("2_mesh")
+surface_material_override/0 = SubResource("3_mat")
+
+[node name="Health" type="Node" parent="."]
+script = ExtResource("2_health")
+max_health = 100.0
+
+[node name="EnemyHealthBar3D" type="Node3D" parent="."]
+script = ExtResource("3_enemy_bar")
+height_offset = 2.35

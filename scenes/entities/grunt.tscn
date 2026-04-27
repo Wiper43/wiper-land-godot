@@ -1,106 +1,106 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene format=3 uid="uid://b4dpoynxba2bj"]
 
-[ext_resource type="Script" path="res://scripts/entities/grunt.gd" id="1_grunt"]
-[ext_resource type="Script" path="res://scripts/combat/health.gd" id="2_health"]
-[ext_resource type="Script" path="res://scripts/ui/enemy_health_bar_3d.gd" id="3_enemy_bar"]
+[ext_resource type="Script" uid="uid://c31wxjuwo2byq" path="res://scripts/entities/grunt.gd" id="1_grunt"]
+[ext_resource type="Script" uid="uid://byxa5reosn3n8" path="res://scripts/combat/health.gd" id="2_health"]
+[ext_resource type="Script" uid="uid://cspt67brmkryl" path="res://scripts/ui/enemy_health_bar_3d.gd" id="3_enemy_bar"]
 
 [sub_resource type="CapsuleShape3D" id="3_capsule"]
 radius = 0.4
 height = 1.8
 
+[sub_resource type="SphereMesh" id="6_skull_mesh"]
+radius = 0.28
+height = 0.46
+
 [sub_resource type="StandardMaterial3D" id="4_bone_mat"]
 albedo_color = Color(0.86, 0.82, 0.68, 1)
 roughness = 0.88
+
+[sub_resource type="BoxMesh" id="10_eye_mesh"]
+size = Vector3(0.07, 0.045, 0.03)
 
 [sub_resource type="StandardMaterial3D" id="5_dark_mat"]
 albedo_color = Color(0.06, 0.05, 0.045, 1)
 roughness = 0.95
 
-[sub_resource type="SphereMesh" id="6_skull_mesh"]
-radius = 0.28
-height = 0.46
-
-[sub_resource type="BoxMesh" id="7_bone_long_mesh"]
-size = Vector3(0.11, 0.72, 0.11)
+[sub_resource type="BoxMesh" id="9_spine_mesh"]
+size = Vector3(0.12, 0.82, 0.12)
 
 [sub_resource type="BoxMesh" id="8_bone_short_mesh"]
 size = Vector3(0.75, 0.08, 0.1)
 
-[sub_resource type="BoxMesh" id="9_spine_mesh"]
-size = Vector3(0.12, 0.82, 0.12)
+[sub_resource type="BoxMesh" id="7_bone_long_mesh"]
+size = Vector3(0.11, 0.72, 0.11)
 
-[sub_resource type="BoxMesh" id="10_eye_mesh"]
-size = Vector3(0.07, 0.045, 0.03)
-
-[node name="Grunt" type="CharacterBody3D"]
+[node name="Grunt" type="CharacterBody3D" unique_id=1670331700]
 collision_layer = 4
-collision_mask = 1
 script = ExtResource("1_grunt")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1361760848]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 shape = SubResource("3_capsule")
 
-[node name="SkeletonVisual" type="Node3D" parent="."]
+[node name="SkeletonVisual" type="Node3D" parent="." unique_id=249353576]
 
-[node name="Skull" type="MeshInstance3D" parent="SkeletonVisual"]
+[node name="Skull" type="MeshInstance3D" parent="SkeletonVisual" unique_id=772065634]
 transform = Transform3D(1, 0, 0, 0, 0.86, 0, 0, 0, 0.92, 0, 1.78, 0)
 mesh = SubResource("6_skull_mesh")
 surface_material_override/0 = SubResource("4_bone_mat")
 
-[node name="LeftEye" type="MeshInstance3D" parent="SkeletonVisual/Skull"]
+[node name="LeftEye" type="MeshInstance3D" parent="SkeletonVisual/Skull" unique_id=239544294]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.095, 0.04, -0.25)
 mesh = SubResource("10_eye_mesh")
 surface_material_override/0 = SubResource("5_dark_mat")
 
-[node name="RightEye" type="MeshInstance3D" parent="SkeletonVisual/Skull"]
+[node name="RightEye" type="MeshInstance3D" parent="SkeletonVisual/Skull" unique_id=420636886]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.095, 0.04, -0.25)
 mesh = SubResource("10_eye_mesh")
 surface_material_override/0 = SubResource("5_dark_mat")
 
-[node name="Spine" type="MeshInstance3D" parent="SkeletonVisual"]
+[node name="Spine" type="MeshInstance3D" parent="SkeletonVisual" unique_id=1505166083]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.13, 0)
 mesh = SubResource("9_spine_mesh")
 surface_material_override/0 = SubResource("4_bone_mat")
 
-[node name="RibTop" type="MeshInstance3D" parent="SkeletonVisual"]
+[node name="RibTop" type="MeshInstance3D" parent="SkeletonVisual" unique_id=420558493]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.36, -0.02)
 mesh = SubResource("8_bone_short_mesh")
 surface_material_override/0 = SubResource("4_bone_mat")
 
-[node name="RibMid" type="MeshInstance3D" parent="SkeletonVisual"]
+[node name="RibMid" type="MeshInstance3D" parent="SkeletonVisual" unique_id=981046739]
 transform = Transform3D(0.82, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.18, -0.02)
 mesh = SubResource("8_bone_short_mesh")
 surface_material_override/0 = SubResource("4_bone_mat")
 
-[node name="Pelvis" type="MeshInstance3D" parent="SkeletonVisual"]
+[node name="Pelvis" type="MeshInstance3D" parent="SkeletonVisual" unique_id=1730944359]
 transform = Transform3D(0.7, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.78, 0)
 mesh = SubResource("8_bone_short_mesh")
 surface_material_override/0 = SubResource("4_bone_mat")
 
-[node name="LeftArm" type="MeshInstance3D" parent="SkeletonVisual"]
+[node name="LeftArm" type="MeshInstance3D" parent="SkeletonVisual" unique_id=1666383365]
 transform = Transform3D(0.9, 0, 0, 0, 0.75, 0, 0, 0, 0.9, -0.48, 1.12, 0)
 mesh = SubResource("7_bone_long_mesh")
 surface_material_override/0 = SubResource("4_bone_mat")
 
-[node name="RightArm" type="MeshInstance3D" parent="SkeletonVisual"]
+[node name="RightArm" type="MeshInstance3D" parent="SkeletonVisual" unique_id=1700479814]
 transform = Transform3D(0.9, 0, 0, 0, 0.75, 0, 0, 0, 0.9, 0.48, 1.12, 0)
 mesh = SubResource("7_bone_long_mesh")
 surface_material_override/0 = SubResource("4_bone_mat")
 
-[node name="LeftLeg" type="MeshInstance3D" parent="SkeletonVisual"]
+[node name="LeftLeg" type="MeshInstance3D" parent="SkeletonVisual" unique_id=397387074]
 transform = Transform3D(1, 0, 0, 0, 0.88, 0, 0, 0, 1, -0.18, 0.36, 0)
 mesh = SubResource("7_bone_long_mesh")
 surface_material_override/0 = SubResource("4_bone_mat")
 
-[node name="RightLeg" type="MeshInstance3D" parent="SkeletonVisual"]
+[node name="RightLeg" type="MeshInstance3D" parent="SkeletonVisual" unique_id=145221165]
 transform = Transform3D(1, 0, 0, 0, 0.88, 0, 0, 0, 1, 0.18, 0.36, 0)
 mesh = SubResource("7_bone_long_mesh")
 surface_material_override/0 = SubResource("4_bone_mat")
 
-[node name="Health" type="Node" parent="."]
+[node name="Health" type="Node" parent="." unique_id=1094978059]
 script = ExtResource("2_health")
 max_health = 30.0
 
-[node name="EnemyHealthBar3D" type="Node3D" parent="."]
+[node name="EnemyHealthBar3D" type="Node3D" parent="." unique_id=1294047913]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.43553478, 0.44054174, -2.422736)
 script = ExtResource("3_enemy_bar")

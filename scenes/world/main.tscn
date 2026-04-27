@@ -1,8 +1,18 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene format=3 uid="uid://c0gfhrscqgyad"]
 
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="2_hud"]
-[ext_resource type="Script" path="res://scripts/world/main.gd" id="3_main"]
+[ext_resource type="Script" uid="uid://bkwmk6nrna2m2" path="res://scripts/world/main.gd" id="3_main"]
+
+[sub_resource type="SphereMesh" id="10_sun_mesh"]
+radius = 36.0
+height = 72.0
+
+[sub_resource type="StandardMaterial3D" id="11_sun_mat"]
+albedo_color = Color(1, 0.78, 0.28, 1)
+emission_enabled = true
+emission = Color(1, 0.68, 0.18, 1)
+emission_energy_multiplier = 5.0
 
 [sub_resource type="SphereMesh" id="4_sphere"]
 radius = 1024.0
@@ -20,7 +30,6 @@ bottom_radius = 6.0
 height = 256.0
 
 [sub_resource type="StandardMaterial3D" id="8_north_mat"]
-albedo_color = Color(1, 1, 1, 1)
 emission_enabled = true
 emission = Color(1, 1, 1, 1)
 emission_energy_multiplier = 2.0
@@ -31,56 +40,62 @@ emission_enabled = true
 emission = Color(1, 0, 0, 1)
 emission_energy_multiplier = 2.0
 
-[sub_resource type="SphereMesh" id="10_sun_mesh"]
-radius = 36.0
-height = 72.0
-
-[sub_resource type="StandardMaterial3D" id="11_sun_mat"]
-albedo_color = Color(1, 0.78, 0.28, 1)
-emission_enabled = true
-emission = Color(1, 0.68, 0.18, 1)
-emission_energy_multiplier = 5.0
-
-[node name="Main" type="Node3D"]
+[node name="Main" type="Node3D" unique_id=407086527]
 script = ExtResource("3_main")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.866, -0.433, 0.25, 0, 0.5, 0.866, -0.5, -0.75, 0.433, 0, 10, 0)
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1946729078]
+transform = Transform3D(0.89021903, 0.2522619, 0.37930736, -0.3978132, 0.024842156, 0.9171301, 0.22193415, -0.9673401, 0.12246808, -0.33947754, 265.90793, 1.3070679)
 light_color = Color(1, 0.91, 0.76, 1)
-light_energy = 1.45
+light_energy = 0.825
+light_indirect_energy = 1.792
+light_volumetric_fog_energy = 3.851
 shadow_enabled = true
 
-[node name="Sun" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1400, 960, 550)
+[node name="Sun" type="MeshInstance3D" parent="." unique_id=340156212]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1323.9951, 1060.9741, 834.6284)
 mesh = SubResource("10_sun_mesh")
 surface_material_override/0 = SubResource("11_sun_mat")
 
-[node name="SunGlow" type="OmniLight3D" parent="Sun"]
+[node name="SunGlow" type="OmniLight3D" parent="Sun" unique_id=1195486667]
+visible = false
 light_color = Color(1, 0.72, 0.32, 1)
 light_energy = 4.0
 omni_range = 180.0
 
-[node name="Globe" type="StaticBody3D" parent="."]
+[node name="Globe" type="StaticBody3D" parent="." unique_id=896147564]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1024, 0)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Globe"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Globe" unique_id=1189491959]
+transform = Transform3D(0.9957787, 0, 0, 0, 0.9957787, 0, 0, 0, 0.9957787, 0, 0, 0)
 mesh = SubResource("4_sphere")
 surface_material_override/0 = SubResource("5_mat")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Globe"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Globe" unique_id=2107397536]
 shape = SubResource("6_sphere_shape")
 
-[node name="NorthPoleBeam" type="MeshInstance3D" parent="."]
+[node name="NorthPoleBeam" type="MeshInstance3D" parent="." unique_id=1638753434]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 128, 0)
 mesh = SubResource("7_beam_mesh")
 surface_material_override/0 = SubResource("8_north_mat")
 
-[node name="SouthPoleBeam" type="MeshInstance3D" parent="."]
+[node name="SouthPoleBeam" type="MeshInstance3D" parent="." unique_id=1398637859]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2176, 0)
 mesh = SubResource("7_beam_mesh")
 surface_material_override/0 = SubResource("9_south_mat")
 
-[node name="Player" parent="." instance=ExtResource("1_player")]
+[node name="Player" parent="." unique_id=1501864674 instance=ExtResource("1_player")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 50, 0)
 
-[node name="HUD" parent="." instance=ExtResource("2_hud")]
+[node name="HUD" parent="." unique_id=125679249 instance=ExtResource("2_hud")]
+
+[node name="SpotLight3D" type="SpotLight3D" parent="." unique_id=1189857353]
+transform = Transform3D(-1, 0, 0, 0, -0.49269694, 0.870201, 0, 0.870201, 0.49269694, -39.30258, 614.61316, 364.82593)
+visible = false
+light_color = Color(0.882488, 0.89832884, 0.91794145, 1)
+light_energy = 3.407
+light_indirect_energy = 3.635
+light_volumetric_fog_energy = 6.63
+light_size = 0.322
+shadow_enabled = true
+spot_range = 670.7348
+spot_angle = 12.762854

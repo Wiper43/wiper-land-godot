@@ -2,12 +2,17 @@ class_name TerrainGenerator
 extends RefCounted
 
 # --- Tuning constants ---
-const PATCH_HALF  : float = 100.0   # patch is 200 × 200 world units
+const PATCH_HALF  : float = 300.0   # patch is 600 × 600 world units
 const GRID_STEPS  : int   = 128     # 129 × 129 vertex grid (16 641 verts)
-const MAX_HEIGHT  : float = 22.0    # tallest mountain peak
-const RIVER_DEPTH : float = 5.5     # how deep river valleys are carved
+const MAX_HEIGHT  : float = 80.0    # tallest mountain peak
+const RIVER_DEPTH : float = 14.0    # how deep river valleys are carved
 const RIVER_BAND  : float = 0.065   # noise-zero band width → river width
 const CLIFF_SLOPE : float = 1.25    # gradient magnitude threshold for rock/cliff
+const SAFE_POLE_DIRECTION : Vector3 = Vector3.UP
+const SAFE_POLE_RADIUS : float = 100.0
+const SAFE_POLE_BLEND_RADIUS : float = 160.0
+const SAFE_POLE_MAX_HEIGHT : float = 1.5
+const DOMAIN_WARP_STRENGTH : float = 35.0
 
 # --- Noise layers ---
 var _continental : FastNoiseLite   # large-scale highland / lowland mask
@@ -19,7 +24,7 @@ var _river       : FastNoiseLite   # river channel mask
 
 
 func _init(p_seed: int = 0) -> void:
-	_continental = _make(p_seed,     0.005, FastNoiseLite.FRACTAL_FBM,    3)
+	_continental = _make(p_seed,     0.002, FastNoiseLite.FRACTAL_FBM,    3)
 	_mountain    = _make(p_seed + 1, 0.018, FastNoiseLite.FRACTAL_RIDGED, 5)
 	_hills       = _make(p_seed + 2, 0.025, FastNoiseLite.FRACTAL_FBM,    4)
 	_detail      = _make(p_seed + 3, 0.10,  FastNoiseLite.FRACTAL_FBM,    2)
@@ -30,12 +35,12 @@ func _init(p_seed: int = 0) -> void:
 # Returns terrain height at world-space (x, z).
 func sample_height(x: float, z: float) -> float:
 	# 1. Domain warp — twists coordinates so features look organic
-	var wx : float = x + _warp.get_noise_2d(x,          z         ) * 35.0
-	var wz : float = z + _warp.get_noise_2d(x + 419.2, z + 831.7) * 35.0
+	var wx : float = x + _warp.get_noise_2d(x,          z         ) * DOMAIN_WARP_STRENGTH
+	var wz : float = z + _warp.get_noise_2d(x + 419.2, z + 831.7) * DOMAIN_WARP_STRENGTH
 
 	# 2. Continental mask [0..1]: 0 = lowland, 1 = highland/mountain base
 	var cont : float = _continental.get_noise_2d(wx, wz) * 0.5 + 0.5
-	cont = _smoothstep(0.35, 0.65, cont)
+	cont = _smoothstep(0.50, 0.78, cont)
 
 	# 3. Ridged mountain layer — FRACTAL_RIDGED already produces peaks
 	var peak : float = _mountain.get_noise_2d(wx, wz) * 0.5 + 0.5
@@ -45,7 +50,7 @@ func sample_height(x: float, z: float) -> float:
 	var hill : float = _hills.get_noise_2d(wx, wz) * 0.5 + 0.5
 
 	# 5. Blend: lowlands get gentle hills, highlands get mountains
-	var h : float = lerpf(hill * 4.0, peak * MAX_HEIGHT, cont)
+	var h : float = lerpf(hill * 2.5, peak * MAX_HEIGHT, cont)
 
 	# 6. Micro surface roughness
 	h += _detail.get_noise_2d(wx, wz) * 0.5
@@ -59,6 +64,40 @@ func sample_height(x: float, z: float) -> float:
 	h -= carve * RIVER_DEPTH * alt_mask
 
 	return h
+
+
+# Returns terrain height for a point on the spherical planet. Sampling in 3D
+# world space keeps adjacent chunks from repeating or changing shape at seams.
+func sample_height_on_sphere(surface_dir: Vector3) -> float:
+	var safe_dir : Vector3 = surface_dir
+	if safe_dir.length_squared() < 0.001:
+		safe_dir = SAFE_POLE_DIRECTION
+	safe_dir = safe_dir.normalized()
+
+	var p : Vector3 = safe_dir * Planet.RADIUS
+	var wx : float = p.x + _warp.get_noise_3d(p.x, p.y, p.z) * DOMAIN_WARP_STRENGTH
+	var wy : float = p.y + _warp.get_noise_3d(p.x + 419.2, p.y + 831.7, p.z + 217.4) * DOMAIN_WARP_STRENGTH
+	var wz : float = p.z + _warp.get_noise_3d(p.x + 173.6, p.y + 591.3, p.z + 947.8) * DOMAIN_WARP_STRENGTH
+
+	var cont : float = _continental.get_noise_3d(wx, wy, wz) * 0.5 + 0.5
+	cont = _smoothstep(0.50, 0.78, cont)
+
+	var peak : float = _mountain.get_noise_3d(wx, wy, wz) * 0.5 + 0.5
+	peak = pow(peak, 1.8)
+
+	var hill : float = _hills.get_noise_3d(wx, wy, wz) * 0.5 + 0.5
+	var h : float = lerpf(hill * 2.5, peak * MAX_HEIGHT, cont)
+	h += _detail.get_noise_3d(wx, wy, wz) * 0.5
+
+	var rv : float = _river.get_noise_3d(wx, wy, wz)
+	var carve : float = maxf(0.0, RIVER_BAND - absf(rv)) / RIVER_BAND
+	carve = pow(carve, 0.65)
+	var alt_mask : float = clampf(1.0 - h / (MAX_HEIGHT * 0.55), 0.0, 1.0)
+	h -= carve * RIVER_DEPTH * alt_mask
+
+	var pole_factor : float = _safe_pole_mountain_factor(safe_dir)
+	var safe_height : float = clampf(h, 0.0, SAFE_POLE_MAX_HEIGHT)
+	return lerpf(safe_height, h, pole_factor)
 
 
 # Returns a vertex color based on altitude and surface slope.
@@ -120,6 +159,76 @@ func build_mesh() -> ArrayMesh:
 
 	st.generate_normals()
 	return st.commit()
+
+
+# Builds a terrain ArrayMesh curved to fit the planet sphere.
+# center_dir: normalized Vector3 from Planet.CENTER toward this chunk's center on the surface.
+func build_sphere_patch(center_dir: Vector3) -> ArrayMesh:
+	var tangents : Array[Vector3] = _make_tangent_frame(center_dir)
+	var tangent_x : Vector3 = tangents[0]
+	var tangent_z : Vector3 = tangents[1]
+
+	var row  : int   = GRID_STEPS + 1
+	var step : float = (PATCH_HALF * 2.0) / float(GRID_STEPS)
+
+	# Pre-compute heights from world-space sphere directions so neighboring
+	# chunks agree on terrain shape instead of repeating each patch locally.
+	var heights := PackedFloat32Array()
+	var directions : Array[Vector3] = []
+	heights.resize(row * row)
+	directions.resize(row * row)
+	for iz: int in range(row):
+		for ix: int in range(row):
+			var u : float = -PATCH_HALF + ix * step
+			var v : float = -PATCH_HALF + iz * step
+			var flat : Vector3 = tangent_x * u + tangent_z * v
+			var dir : Vector3 = (flat + center_dir * Planet.RADIUS).normalized()
+			var i : int = iz * row + ix
+			directions[i] = dir
+			heights[i] = sample_height_on_sphere(dir)
+
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+
+	for iz: int in range(row):
+		for ix: int in range(row):
+			var i : int = iz * row + ix
+			var h : float = heights[i]
+			var dir : Vector3 = directions[i]
+			# Surface point + height displaced outward along normal
+			var pos : Vector3 = Planet.CENTER + Planet.RADIUS * dir + h * dir
+
+			var sl : float = _slope(ix, iz, heights, step, row)
+			st.set_color(surface_color(h, sl))
+			st.set_normal(dir)
+			st.add_vertex(pos)
+
+	for iz: int in range(GRID_STEPS):
+		for ix: int in range(GRID_STEPS):
+			var a : int = iz * row + ix
+			var b : int = (iz + 1) * row + ix
+			var c : int = (iz + 1) * row + (ix + 1)
+			var d : int = iz * row + (ix + 1)
+			st.add_index(a); st.add_index(b); st.add_index(c)
+			st.add_index(a); st.add_index(c); st.add_index(d)
+
+	return st.commit()
+
+
+# Returns [tangent_x, tangent_z] — two axes perpendicular to center_dir.
+func _make_tangent_frame(center_dir: Vector3) -> Array[Vector3]:
+	var up : Vector3 = Vector3.RIGHT if absf(center_dir.dot(Vector3.RIGHT)) < 0.9 \
+					   else Vector3.FORWARD
+	var tx : Vector3 = center_dir.cross(up).normalized()
+	var tz : Vector3 = center_dir.cross(tx).normalized()
+	var result : Array[Vector3] = [tx, tz]
+	return result
+
+
+func _safe_pole_mountain_factor(surface_dir: Vector3) -> float:
+	var dot_to_pole : float = clampf(surface_dir.dot(SAFE_POLE_DIRECTION), -1.0, 1.0)
+	var surface_distance : float = acos(dot_to_pole) * Planet.RADIUS
+	return _smoothstep(SAFE_POLE_RADIUS, SAFE_POLE_BLEND_RADIUS, surface_distance)
 
 
 # --- Helpers ---

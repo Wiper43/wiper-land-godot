@@ -6,6 +6,22 @@
 
 ---
 
+## Local Tooling
+
+Godot executable:
+
+`E:\edge downloads 2025\Godot_v4.6.2-stable_win64.exe\Godot_v4.6.2-stable_win64.exe`
+
+Use this path for command-line validation when Godot is not on `PATH`, for example:
+
+```powershell
+& "E:\edge downloads 2025\Godot_v4.6.2-stable_win64.exe\Godot_v4.6.2-stable_win64.exe" --path "E:\wiper-land-godot"
+```
+
+Prefer headless or command-line checks for script/scene validation when possible. Open the editor UI only when visual inspection or editor-only tooling is needed.
+
+---
+
 ## Wiki
 
 This is the Godot project for Wiper-Land.

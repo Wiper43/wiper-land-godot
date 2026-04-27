@@ -13,7 +13,14 @@
       "Bash(netstat -ano)",
       "mcp__blender__get_scene_info",
       "mcp__blender__execute_blender_code",
-      "mcp__blender__get_viewport_screenshot"
+      "mcp__blender__get_viewport_screenshot",
+      "mcp__godot__run_project",
+      "mcp__godot__get_debug_output",
+      "Bash(\"E:\\\\Godot\\\\Godot_v4.6-dev4_win64.exe\" --path .)",
+      "Bash(\"E:\\\\Godot\\\\Godot_v4.6-dev4_win64.exe\" --headless --path . --quit)",
+      "Bash(cmd.exe /c \"where godot\")",
+      "Bash(cmd.exe /c \"dir E:\\\\Godot*.exe /s /b\")",
+      "mcp__godot__launch_editor"
     ]
   }
 }
